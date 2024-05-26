@@ -1,104 +1,122 @@
+import random
 import pygame
-import sys
+import time
 
 # Инициализация Pygame
 pygame.init()
 
 # Определение цветов
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+white = (255, 255, 255)
+yellow = (255, 255, 102)
+black = (0, 0, 0)
+red = (213, 50, 80)
+green = (0, 255, 0)
+blue = (50, 153, 213)
 
-# Определение размеров окна
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+# Размеры экрана
+display_width = 800
+display_height = 600
 
-# Настройки ракеток и мяча
-PADDLE_WIDTH = 10
-PADDLE_HEIGHT = 100
-BALL_SIZE = 10
-BALL_SPEED = 5
+# Создание окна игры
+dis = pygame.display.set_mode((display_width, display_height))
+pygame.display.set_caption('Snake Game')
 
-# Создание окна
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Game of Ping Pong')
+clock = pygame.time.Clock()
 
-# Определение начальных позиций ракеток и мяча
-paddle1_x = 50
-paddle1_y = (WINDOW_HEIGHT // 2) - (PADDLE_HEIGHT // 2)
-paddle2_x = WINDOW_WIDTH - 50 - PADDLE_WIDTH
-paddle2_y = (WINDOW_HEIGHT // 2) - (PADDLE_HEIGHT // 2)
-ball_x = WINDOW_WIDTH // 2
-ball_y = WINDOW_HEIGHT // 2
-ball_dx = BALL_SPEED
-ball_dy = BALL_SPEED
+snake_block = 10
+snake_speed = 15
 
-# Определение начального счета
-score1 = 0
-score2 = 0
+font_style = pygame.font.SysFont("bahnschrift", 25)
+score_font = pygame.font.SysFont("comicsansms", 35)
 
-# Создание шрифта для отображения счета
-font = pygame.font.Font(None, 36)
 
-# Основной игровой цикл
-running = True
-while running:
-    # Обработка событий
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+def our_snake(snake_block, snake_list):
+    for x in snake_list:
+        pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
-    # Обработка нажатий клавиш
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w] and paddle1_y > 0:
-        paddle1_y -= BALL_SPEED
-    if keys[pygame.K_s] and paddle1_y < WINDOW_HEIGHT - PADDLE_HEIGHT:
-        paddle1_y += BALL_SPEED
-    if keys[pygame.K_UP] and paddle2_y > 0:
-        paddle2_y -= BALL_SPEED
-    if keys[pygame.K_DOWN] and paddle2_y < WINDOW_HEIGHT - PADDLE_HEIGHT:
-        paddle2_y += BALL_SPEED
 
-    # Обновление позиции мяча
-    ball_x += ball_dx
-    ball_y += ball_dy
+def message(msg, color):
+    mesg = font_style.render(msg, True, color)
+    dis.blit(mesg, [display_width / 6, display_height / 3])
 
-    # Проверка столкновений с верхней и нижней границами
-    if ball_y <= 0 or ball_y >= WINDOW_HEIGHT - BALL_SIZE:
-        ball_dy = -ball_dy
 
-    # Проверка столкновений с ракетками
-    if (paddle1_x < ball_x < paddle1_x + PADDLE_WIDTH and paddle1_y < ball_y < paddle1_y + PADDLE_HEIGHT) or \
-       (paddle2_x < ball_x < paddle2_x + PADDLE_WIDTH and paddle2_y < ball_y < paddle2_y + PADDLE_HEIGHT):
-        ball_dx = -ball_dx
+def gameLoop():
+    game_over = False
+    game_close = False
 
-    # Проверка выхода мяча за границы экрана
-    if ball_x < 0:
-        score2 += 1
-        ball_x = WINDOW_WIDTH // 2
-        ball_y = WINDOW_HEIGHT // 2
-    elif ball_x > WINDOW_WIDTH:
-        score1 += 1
-        ball_x = WINDOW_WIDTH // 2
-        ball_y = WINDOW_HEIGHT // 2
+    x1 = display_width / 2
+    y1 = display_height / 2
 
-    # Очистка экрана
-    screen.fill(BLACK)
+    x1_change = 0
+    y1_change = 0
 
-    # Отрисовка объектов
-    pygame.draw.rect(screen, WHITE, (paddle1_x, paddle1_y, PADDLE_WIDTH, PADDLE_HEIGHT))
-    pygame.draw.rect(screen, WHITE, (paddle2_x, paddle2_y, PADDLE_WIDTH, PADDLE_HEIGHT))
-    pygame.draw.ellipse(screen, WHITE, (ball_x, ball_y, BALL_SIZE, BALL_SIZE))
+    snake_List = []
+    Length_of_snake = 1
 
-    # Отображение счета
-    score_text = font.render(f"{score1} - {score2}", True, WHITE)
-    screen.blit(score_text, (WINDOW_WIDTH // 2 - score_text.get_width() // 2, 20))
+    foodx = round(random.randrange(0, display_width - snake_block) / 10.0) * 10.0
+    foody = round(random.randrange(0, display_height - snake_block) / 10.0) * 10.0
 
-    # Обновление экрана
-    pygame.display.flip()
+    while not game_over:
 
-    # Задержка для управления скоростью игры
-    pygame.time.Clock().tick(60)
+        while game_close == True:
+            dis.fill(blue)
+            message("Вы проиграли! Нажмите Q - Выход или C - Играть снова", red)
+            pygame.display.update()
 
-# Завершение Pygame
-pygame.quit()
-sys.exit()
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        game_over = True
+                        game_close = False
+                    if event.key == pygame.K_c:
+                        gameLoop()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_over = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    x1_change = -snake_block
+                    y1_change = 0
+                elif event.key == pygame.K_RIGHT:
+                    x1_change = snake_block
+                    y1_change = 0
+                elif event.key == pygame.K_UP:
+                    y1_change = -snake_block
+                    x1_change = 0
+                elif event.key == pygame.K_DOWN:
+                    y1_change = snake_blockx1_change = 0
+
+        if x1 >= display_width or x1 < 0 or y1 >= display_height or y1 < 0:
+            game_close = True
+        x1 += x1_change
+        y1 += y1_change
+        dis.fill(blue)
+        pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
+        snake_Head = []
+        snake_Head.append(x1)
+        snake_Head.append(y1)
+        snake_List.append(snake_Head)
+        if len(snake_List) > Length_of_snake:
+            del snake_List[0]
+
+        for x in snake_List[:-1]:
+            if x == snake_Head:
+                game_close = True
+
+        our_snake(snake_block, snake_List)
+
+        pygame.display.update()
+
+        if x1 == foodx and y1 == foody:
+            foodx = round(random.randrange(0, display_width - snake_block) / 10.0) * 10.0
+            foody = round(random.randrange(0, display_height - snake_block) / 10.0) * 10.0
+            Length_of_snake += 1
+
+        clock.tick(snake_speed)
+
+    pygame.quit()
+    quit()
+
+
+gameLoop()
