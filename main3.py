@@ -347,7 +347,7 @@ def main_menu():
     run = True
     while run:
         win.fill((0, 0, 0))
-        draw_text_middle('Нажмите любую клавишу, чтобы играть', 60, (255, 255, 255), win)
+        draw_text_middle('Нажмите любую клавишу, чтобы играть', 20, (255, 255, 255), win)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
