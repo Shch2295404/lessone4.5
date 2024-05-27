@@ -20,7 +20,7 @@ BALL_SPEED = 5
 
 # Создание окна
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption('Game of Ping Pong')
+pygame.display.set_caption('Игра в пинг-понг')
 
 # Определение начальных позиций ракеток и мяча
 paddle1_x = 50
