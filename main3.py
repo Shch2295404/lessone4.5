@@ -323,14 +323,14 @@ def main():
           if p[1] > -1:
              grid[p[1]][p[0]] = current_piece.color
 
-    if change_piece:
-        for pos in shape_pos:
-            p = (pos[0], pos[1])
-            locked_positions[p] = current_piece.color
-        current_piece = next_piece
-        next_piece = get_shape()
-        change_piece = False
-        score += clear_rows(grid, locked_positions) * 10
+        if change_piece:
+          for pos in shape_pos:
+             p = (pos[0], pos[1])
+             locked_positions[p] = current_piece.color
+          current_piece = next_piece
+          next_piece = get_shape()
+          change_piece = False
+          score += clear_rows(grid, locked_positions) * 10
 
     draw_window(win, grid, score)
     draw_next_shape(next_piece, win)
