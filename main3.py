@@ -367,6 +367,9 @@ pygame.init()
 screen_width = 800
 screen_height = 700
 
+# Определение размеров экрана
 win = pygame.display.set_mode((screen_width, screen_height))
+# Установка названия окна
 pygame.display.set_caption('Tetris')
+# Вызов функции main_menu()
 main_menu()
