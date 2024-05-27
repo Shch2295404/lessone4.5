@@ -338,11 +338,9 @@ def main():
 
     if check_lost(locked_positions):
         run = False
-
-
-draw_text_middle("ТЫ ПРОИГРАЛ", 80, (255, 255, 255), win)
-pygame.display.update()
-pygame.time.delay(2000)
+        draw_text_middle("ТЫ ПРОИГРАЛ", 80, (255, 255, 255), win)
+        pygame.display.update()
+        pygame.time.delay(2000)
 
 
 def main_menu():
