@@ -319,28 +319,28 @@ def main():
         shape_pos = convert_shape_format(current_piece)
 
         for pos in shape_pos:
-          p = (pos[0], pos[1])
-          if p[1] > -1:
-             grid[p[1]][p[0]] = current_piece.color
+            p = (pos[0], pos[1])
+            if p[1] > -1:
+                grid[p[1]][p[0]] = current_piece.color
 
         if change_piece:
-          for pos in shape_pos:
-             p = (pos[0], pos[1])
-             locked_positions[p] = current_piece.color
-          current_piece = next_piece
-          next_piece = get_shape()
-          change_piece = False
-          score += clear_rows(grid, locked_positions) * 10
+            for pos in shape_pos:
+                p = (pos[0], pos[1])
+                locked_positions[p] = current_piece.color
+            current_piece = next_piece
+            next_piece = get_shape()
+            change_piece = False
+            score += clear_rows(grid, locked_positions) * 10
 
-    draw_window(win, grid, score)
-    draw_next_shape(next_piece, win)
-    pygame.display.update()
-
-    if check_lost(locked_positions):
-        run = False
-        draw_text_middle("ТЫ ПРОИГРАЛ", 80, (255, 255, 255), win)
+        draw_window(win, grid, score)
+        draw_next_shape(next_piece, win)
         pygame.display.update()
-        pygame.time.delay(2000)
+
+        if check_lost(locked_positions):
+            run = False
+            draw_text_middle("ТЫ ПРОИГРАЛ", 80, (255, 255, 255), win)
+            pygame.display.update()
+            pygame.time.delay(2000)
 
 
 def main_menu():
@@ -359,6 +359,7 @@ def main_menu():
                 draw_text_middle('Нажмите любую клавишу, чтобы играть', 20, (255, 255, 255), win)
                 pygame.display.update()
     pygame.quit()
+
 
 # Инициализация Pygame
 pygame.init()
