@@ -354,11 +354,18 @@ def main_menu():
                 run = False
             if event.type == pygame.KEYDOWN:
                 main()
+                # Возвращаемся в меню после завершения main()
+                win.fill((0, 0, 0))
+                draw_text_middle('Нажмите любую клавишу, чтобы играть', 20, (255, 255, 255), win)
+                pygame.display.update()
     pygame.quit()
-
 
 # Инициализация Pygame
 pygame.init()
+
+# Предполагается, что screen_width и screen_height определены где-то еще в вашем коде
+screen_width = 800
+screen_height = 700
 
 win = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Tetris')
