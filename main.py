@@ -15,6 +15,7 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 
 # Игрок
 player_size = 50
@@ -23,13 +24,13 @@ player_color = GREEN
 
 # Монстры
 monster_size = 50
-monster_colors = [RED, BLUE, (255, 255, 0)]
+monster_colors = [RED, BLUE, YELLOW]
+monster_directions = ['down', 'right', 'left']
 monsters = []
 
 # Скорость
 player_speed = 5
 monster_speed = 3
-
 
 # Создание начальных монстров
 def create_monsters():
@@ -38,10 +39,10 @@ def create_monsters():
         y_pos = random.randint(0, screen_height - monster_size)
         monster = {
             "pos": [x_pos, y_pos],
-            "color": monster_colors[i]
+            "color": monster_colors[i],
+            "direction": monster_directions[i]
         }
         monsters.append(monster)
-
 
 create_monsters()
 
@@ -67,10 +68,21 @@ while run:
 
     # Движение монстров
     for monster in monsters:
-        monster["pos"][1] += monster_speed
-        if monster["pos"][1] >= screen_height:
-            monster["pos"][1] = 0 - monster_size
-            monster["pos"][0] = random.randint(0, screen_width - monster_size)
+        if monster["direction"] == "down":
+            monster["pos"][1] += monster_speed
+            if monster["pos"][1] >= screen_height:
+                monster["pos"][1] = 0 - monster_size
+                monster["pos"][0] = random.randint(0, screen_width - monster_size)
+        elif monster["direction"] == "right":
+            monster["pos"][0] += monster_speed
+            if monster["pos"][0] >= screen_width:
+                monster["pos"][0] = 0 - monster_size
+                monster["pos"][1] = random.randint(0, screen_height - monster_size)
+        elif monster["direction"] == "left":
+            monster["pos"][0] -= monster_speed
+            if monster["pos"][0] <= 0 - monster_size:
+                monster["pos"][0] = screen_width
+                monster["pos"][1] = random.randint(0, screen_height - monster_size)
 
     # Проверка столкновений
     for monster in monsters:
